@@ -1,0 +1,72 @@
+.main3{width:718px;margin-left:auto;margin-right:auto;text-align:left}
+.center{text-align:center; margin-left:110px;}
+.floatr{float:right}
+.floatl{float:left}
+.left{text-align:left}
+.width459{width:800px;} /* must have width to work in safari */
+.width259{width:259px;}
+.width230{width:230px;}
+.bold{font-weight:bold}
+.medium{font-size:14px}
+.position2{position:relative;top:-116px;left:10px;text-align:left}
+.position3{position:relative;top:-135px;left:35px;text-align:left}
+.red{color:#a52742;}
+.clear{clear:both;}
+
+.bumpright{position:relative;left:-135px; margin-top:-422px; display:none;} /* mac ie5.x doesn't like position relative */
+
+/* .bumpup{margin-top:-5px;margin-bottom:4px;}  for plus image to bump up to align w text and gap below */
+.bumpup{position:relative;left:100px; top:-55px; display: none;} 
+/* ie5 mac positioning styles must be absolute, tantek hack follows */
+.button{
+  margin-top: 15px;
+}
+.btn-style{background-color:white; color:steelblue; height:35px; border-radius:20px;}
+/* Hide from IE-Mac \*/ 
+.up{position:relative;top:-70px;}
+/* End hide */
+
+/*\*//*/
+.position3{position:absolute;top:265px;left:108px;}
+.up{margin-top:0em;}
+.floatl{};
+/**/ 
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: blue;
+  stroke-width: 1.5px;
+}
+.line1 {
+  fill: none;
+  stroke: green;
+  stroke-width: 1.5px;
+}
+.line2 {
+  fill: none;
+  stroke: red;
+  stroke-width: 1.5px;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+
+.focus line{
+	fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}

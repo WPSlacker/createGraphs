@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+
+      <div class="center">
+        <div class="main3 left">
+          <div class="floatr width459" id="plot">
+            
+          </div>
+
+          <div class="floatl width259 bumpright" id="right-arrow">
+            <div>
+              <img src="asset/arrow-drop.gif" width="220" height="122" alt="arrow with drop shadow">
+            </div>
+            <div class="position2 bold red medium"><br>
+              Y-axis is the chance <br>of Success
+            </div>
+          </div>
+
+          <div class="bumpup" id="up-arrow">
+            <div>
+              <img src="asset/arrow-drop-up.gif" width="225" height="185" alt="arrow with drop shadow">
+            </div>
+             <div class="position3 bold red medium"><br>
+              X-axis is Time <br>in months
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- col1 Ends-->
+
+    <div class="col-sm-3">
+      <div class="button">
+        <button class="btn-style">Instructions</button>
+      </div>
+    </div><!-- col2 Ends-->
+
+  </div><!-- row Ends-->
+</div><!-- container Ends-->
+
+<script src="js/d3.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<!-- script to show / hide the arrows-->
+<script type="text/javascript">
+ $(document).ready(function(){
+  $("button").click(function(){
+    //function to show upper right arrow
+    $("#right-arrow").fadeIn(1500);
+    // delay 5sec and show up arrow
+    setTimeout(function () {
+        show_up_arrow();
+    }, 3000);
+  });
+});
+
+function show_up_arrow(){
+  $("#up-arrow").fadeIn(1500);
+  //delay to hide both arrows
+  setTimeout(function () {
+        hide_arrows();
+    }, 3000);
+}
+
+function hide_arrows(){
+  $("#right-arrow").fadeOut(1500);
+  $("#up-arrow").fadeOut(1500);
+}
+</script>
+
+
+<!-- script to generate graph-->
+<script>
+
+var margin = {top: 100, right: 40, bottom: 50, left: 150}, //60, 20, 50, 50
+    width = 700 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var timebisector = d3.bisector(function (d){return d.t_i;}).left;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left").ticks(5);
+
+var line = d3.svg.line()
+	.interpolate("step-before")
+    .x(function(d) { return x(d.t_i); })
+    .y(function(d) { return y(d.estKM); });
+
+var line2 = d3.svg.line()
+	.interpolate("step-before")
+	.x(function (d){ return x(d.t_i);})
+	.y(function (d){ return y(d.lwrCI);});
+
+var line3 = d3.svg.line()
+	.interpolate("step-before")
+	.x(function (d) {return x(d.t_i);})
+	.y(function (d) {return y(d.uprCI);})
+
+var svg = d3.select("#plot").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.csv("data/dataSurvival.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.t_i = +d.t_i;
+    d.estKM = +d.estKM;
+    d.lwrCI = +d.lwrCI;
+    d.uprCI = +d.uprCI;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.t_i; }));
+  y.domain([0, d3.max(data, function(d) { return Math.max(d.estKM, d.lwrCI, d.uprCI); })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .append("text")
+      .attr("x", 224.333)
+      .attr("y", margin.bottom )
+      .text("Time (months)");
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -125)
+      .attr("y", -50)
+      //.attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Chance of Success");
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line1")
+      .attr("d", line);  
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .style("stroke-dasharray", ("3, 3"))
+      .attr("d", line2);
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line2")
+      .style("stroke-dasharray", ("3, 3"))
+      .attr("d", line3);
+
+  svg.append("text")
+	  .attr("x", 475)
+	  .attr("y", -10)
+	  .style("fill", "blue")
+	  .text("Retail");
+
+  svg.append("text")
+	  .attr("x", 460)
+	  .attr("y", 45)
+	  .style("fill", "green")
+	  .text("Entertainment");
+
+  svg.append("text")
+	  .attr("x", 475)
+	  .attr("y", 150)
+	  .style("fill", "red")
+	  .text("Food");
+
+  svg.append("text")
+  	  .attr("x", 100)
+  	  .attr("y", 0 - (margin.top / 2))
+  	  .style("font-size", 24)
+  	  .style("font-weight", "bold")
+  	  .text("Chance of Achieving Return on Investment");
+
+var focus = svg.append("g")
+			.attr("class", "focus")
+			.style("display", "none");
+
+	focus.append("circle")
+		/*.attr("x1", 0)
+		.attr("y1", 0)
+		.attr("x2", 0)
+		.attr("y2", 340);
+		.attr("class", "line")*/
+		.attr("r", "4.5");
+
+var focus1 = svg.append("g")
+			.attr("class", "focus")
+			.style("display", "none");
+
+	focus1.append("circle")
+		.attr("r", "4.5");
+
+var focus2 = svg.append("g")
+			.attr("class", "focus")
+			.style("display", "none");
+
+	focus2.append("circle")
+		.attr("r", "4.5");
+
+var text1 =	focus.append("text")
+		.attr("x", "5")
+		.attr("dy", "-10em") //-150px
+		.style("fill", "blue");
+
+var text2 =	focus.append("text")
+		.attr("x", "9")
+		.attr("dy", "-5em") //-100px
+		.style("fill", "green");
+
+var text3 = focus.append("text")
+		.attr("x", "9")
+		.attr("dy", "")
+		.style("fill", "red");
+
+	svg.append("rect")
+		.attr("class", "overlay")
+		.attr("width", width)
+		.attr("height", height)
+		.on("mouseover", function() { 
+			focus.style("display", null); 
+			focus1.style("display", null); 
+			focus2.style("display", null);})
+
+      	.on("mouseout", function() { 
+      		focus.style("display", "none"); 
+      		focus1.style("display", "none"); 
+      		focus2.style("display", "none"); })
+
+      	.on("mousemove", mousemove);
+
+    function mousemove(){
+    	var x0 = x.invert(d3.mouse(this)[0]),
+        i = timebisector(data, x0, 1),
+        d0 = data[i - 1],
+        d1 = data[i],
+        d = x0 - d0.t_i > d1.t_i - x0 ? d1 : d0;    	
+        focus.attr("transform", "translate(" + x(d.t_i) + "," + y(d.uprCI) + ")");
+        focus1.attr("transform", "translate(" + x(d.t_i) + "," + y(d.estKM) + ")");
+        focus2.attr("transform", "translate(" + x(d.t_i) + "," + y(d.lwrCI) + ")");
+    	text1.text(d.uprCI.toFixed(2));
+    		//.attr("transform", "translate(" + x(0) + "," + y(d.uprCI) + ")");
+    	text2.text(d.estKM.toFixed(2));
+    	text3.text(d.lwrCI.toFixed(2));
+    }
+
+});
+
+</script>
+</body>
+</html>
