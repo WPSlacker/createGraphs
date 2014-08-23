@@ -3,18 +3,22 @@
 At property-level (groups of prop-level) data, and city-wide data
 
 1) Change Survival Chart to Probability of Success
- - add multiple categories of business types
- - get D&B data (where to put, then access)
- - make more aesthetically pleasing (many transparent CI lines)
+ - (DONE)add multiple categories of business types
+ - get D&B data
+ - (DONE) make more aesthetically pleasing (many transparent CI lines)
 
-2) DC data / Finance Data
+(WAIT)2) DC data / Finance Data
  - Stefan for what finance data
  - New graph ???
  
 
-3) Socrata Data
+(WAIT)3) Socrata Data
  - get John/Stefan's ideas of what they want to use
  - come up with ideas
+
+4) Plan Data
+ - Design different approaches
+ - 
 
 
 
